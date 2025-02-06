@@ -1,0 +1,9 @@
+
+<h2>Crear Nuevo Partido</h2>
+<form action="/partidos/nuevo" method="post">
+    <input type="date" name="fecha" required>
+    <input type="time" name="hora" required>
+    <input type="text" name="ubicacion" placeholder="Ubicación" required>
+    <input type="number" name="maxJugadores" min="4" max="22" value="10">
+    <button type="submit">Crear Partido</button>
+</form>
