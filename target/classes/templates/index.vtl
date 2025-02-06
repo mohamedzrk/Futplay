@@ -2,17 +2,50 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title><?php echo htmlspecialchars($titulo ?? 'Título predeterminado'); ?></title>
+  <title><?php echo htmlspecialchars($titulo ?? 'FutPlay - Organiza Partidos y Torneos'); ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS y Google Fonts -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Iconos Bootstrap (opcional para íconos en features) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Hero Section con imagen de fondo y overlay */
+    .hero {
+      background: url('/images/hero-bg.jpg') no-repeat center center;
+      background-size: cover;
+      height: 80vh;
+      position: relative;
+      color: #fff;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    /* Sección de características */
+    .features {
+      padding: 4rem 0;
+    }
+    .feature-icon {
+      font-size: 3rem;
+      color: #4b6cb7;
+    }
+  </style>
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="fade-in">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand" href="/">FutPlay</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
@@ -25,37 +58,85 @@
     </div>
   </nav>
   
+  <!-- Toast container para mensajes (opcional) -->
   <div aria-live="polite" aria-atomic="true" class="position-relative">
     <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
   </div>
   
-  <div class="container mt-5">
-    <div class="text-center">
-      <h1><?php echo htmlspecialchars($titulo ?? 'Título predeterminado'); ?></h1>
-      <p class="lead"><?php echo htmlspecialchars($mensaje ?? ''); ?></p>
+  <!-- Hero Section -->
+  <header class="hero d-flex align-items-center">
+    <div class="container text-center hero-content">
+      <h1 class="display-3 fw-bold">¡Organiza tus partidos y torneos!</h1>
+      <p class="lead">Únete a la comunidad de FutPlay y disfruta de eventos deportivos en tu zona.</p>
+      <a href="/registro" class="btn btn-primary btn-lg mt-3">Regístrate Ahora</a>
     </div>
-  </div>
+  </header>
   
+  <!-- Features Section -->
+  <section class="features bg-light">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <i class="feature-icon bi bi-people-fill"></i>
+          <h4 class="mt-3">Conecta con Deportistas</h4>
+          <p>Encuentra y reta a otros jugadores, organiza equipos y compite en torneos locales.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <i class="feature-icon bi bi-calendar-event-fill"></i>
+          <h4 class="mt-3">Planifica Tus Eventos</h4>
+          <p>Crea y gestiona partidos y torneos de manera sencilla y rápida.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <i class="feature-icon bi bi-award-fill"></i>
+          <h4 class="mt-3">Gana Reconocimientos</h4>
+          <p>Participa en competiciones y gana premios, reconocimientos y visibilidad en la comunidad.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <img src="/images/about.jpg" alt="Acerca de FutPlay" class="img-fluid rounded shadow-sm">
+        </div>
+        <div class="col-md-6">
+          <h2 class="fw-bold">Acerca de FutPlay</h2>
+          <p>FutPlay es la plataforma ideal para organizar partidos y torneos de fútbol, baloncesto y otros deportes. Conecta con deportistas de tu zona, planifica tus eventos y forma equipos ganadores.</p>
+          <p>Únete a nuestra comunidad y descubre una nueva forma de disfrutar del deporte.</p>
+          <a href="/registro" class="btn btn-primary mt-3">Únete Ahora</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-0">&copy; 2025 FutPlay. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+  <!-- Script para Toast -->
   <script>
     function getUrlParameter(name) {
-      var urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name) || '';
+      return new URLSearchParams(window.location.search).get(name) || '';
     }
     
     var toastMessage = getUrlParameter('toast');
     var toastType = getUrlParameter('toastType') || 'info';
     var validToastTypes = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
-
+    
     if (toastMessage.trim() && validToastTypes.includes(toastType)) {
       var toastContainer = document.getElementById('toast-container');
       var toastHTML = `
       <div class="toast align-items-center text-white bg-${toastType} border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
-          <div class="toast-body">
-            ${toastMessage}
-          </div>
+          <div class="toast-body">${toastMessage}</div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
       </div>`;
@@ -67,3 +148,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+

@@ -322,5 +322,23 @@ public class Main {
             res.redirect("/torneos");
             return null;
         });
+
+        // =====================================================
+        // Inscripción a partidos
+        get("/partidos/inscribirse", (req, res) -> {
+            String usuario = req.session().attribute("usuario");
+            if (usuario == null) {
+                // Si no está autenticado, redirige a login con un mensaje
+                res.redirect("/login?toast=Debes iniciar sesión para inscribirte&toastType=warning");
+                return null;
+            }
+            String partidoId = req.queryParams("id");
+            // Aquí implementar la lógica para inscribir al usuario al partido.
+            // Por ejemplo: registrar la inscripción en la base de datos.
+            // ...
+            res.redirect("/partidos?toast=Inscripción exitosa&toastType=success");
+            return null;
+        });
+        
     }
 }

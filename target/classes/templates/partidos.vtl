@@ -1,9 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Partidos - FutPlay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS y Google Fonts (ya incluidos en styles.css) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Estilos específicos para las imágenes de los partidos */
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/">FutPlay</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          #if($session.usuario)
+            <li class="nav-item"><a class="nav-link" href="/logout">Cerrar sesión</a></li>
+          #else
+            <li class="nav-item"><a class="nav-link" href="/login">Iniciar sesión</a></li>
+            <li class="nav-item"><a class="nav-link" href="/registro">Registro</a></li>
+          #end
+          <li class="nav-item"><a class="nav-link" href="/torneos">Torneos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Toast container para mensajes -->
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+  </div>
+  
+  <!-- Encabezado de la página -->
+  <div class="container text-center mt-5">
+    <h1 class="display-4 fw-bold">Partidos Disponibles</h1>
+    <p class="lead">Consulta los partidos programados y únete a la acción.</p>
+  </div>
+  
+  <!-- Listado de partidos -->
+  <div class="container mt-4">
+    <div class="row">
+      #if($partidos && $partidos.trim() != "")
+        <?= $partidos ?>
+      #else
+        <div class="col-12">
+          <div class="alert alert-info text-center">No hay partidos disponibles.</div>
+        </div>
+      #end
+    </div>
+  </div>
+  
+  <!-- Ejemplo de estructura de tarjeta para un partido (generada dinámicamente en el backend):
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <img src="/images/partido.jpg" class="card-img-top" alt="Partido en acción">
+      <div class="card-body">
+        <h5 class="card-title">Estadio Central</h5>
+        <p class="card-text">
+          <strong>Fecha:</strong> 2025-05-01<br>
+          <strong>Hora:</strong> 18:00
+        </p>
+      </div>
+      <div class="card-footer text-center">
+        #if($session.usuario)
+          <a href="/partidos/inscribirse?id=1" class="btn btn-primary">Inscribirse</a>
+        #else
+          <a href="/login" class="btn btn-secondary">Inicia sesión para inscribirte</a>
+        #end
+      </div>
+    </div>
+  </div>
+  -->
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script para Toast -->
+  <script>
+    function getUrlParameter(name) {
+      return new URLSearchParams(window.location.search).get(name) || '';
+    }
+    
+    var toastMessage = getUrlParameter('toast');
+    var toastType = getUrlParameter('toastType') || 'info';
+    var validToastTypes = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+    
+    if (toastMessage.trim() && validToastTypes.includes(toastType)) {
+      var toastContainer = document.getElementById('toast-container');
+      var toastHTML = `
+      <div class="toast align-items-center text-white bg-${toastType} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">${toastMessage}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>`;
+      toastContainer.innerHTML = toastHTML;
+      var toastEl = toastContainer.querySelector('.toast');
+      var bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+      bsToast.show();
+    }
+  </script>
+</body>
+</html>
 
-<h2>Crear Nuevo Partido</h2>
-<form action="/partidos/nuevo" method="post">
-    <input type="date" name="fecha" required>
-    <input type="time" name="hora" required>
-    <input type="text" name="ubicacion" placeholder="Ubicación" required>
-    <input type="number" name="maxJugadores" min="4" max="22" value="10">
-    <button type="submit">Crear Partido</button>
-</form>
