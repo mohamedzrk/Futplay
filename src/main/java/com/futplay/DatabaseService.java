@@ -1,31 +1,41 @@
 package com.futplay;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.SQLException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class DatabaseService {
 
-    private static Connection connection;
+    private static HikariDataSource dataSource;
 
-    // URL para la base de datos H2 en modo embebido
-    private static final String DB_URL = "jdbc:h2:./futplaydb;AUTO_SERVER=TRUE";
-    private static final String DB_USER = "sa";
-    private static final String DB_PASSWORD = "";
+    // Inicializar el DataSource con HikariCP
+    public static void initDataSource() {
+        // Puedes externalizar estos parámetros con variables de entorno si lo deseas
+        String dbUrl = System.getenv().getOrDefault("DB_URL", "jdbc:h2:./futplaydb;AUTO_SERVER=TRUE");
+        String dbUser = System.getenv().getOrDefault("DB_USER", "sa");
+        String dbPass = System.getenv().getOrDefault("DB_PASS", "");
 
-    // Método para obtener la conexión (se crea si no existe)
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        }
-        return connection;
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dbUrl);
+        config.setUsername(dbUser);
+        config.setPassword(dbPass);
+        // Parámetros opcionales: config.setMaximumPoolSize(10);
+        dataSource = new HikariDataSource(config);
     }
 
-    // Método para inicializar la base de datos y crear las tablas si no existen
+    public static Connection getConnection() throws SQLException {
+        if (dataSource == null) {
+            initDataSource();
+        }
+        return dataSource.getConnection();
+    }
+
+    // Método para inicializar la base de datos (creación de tablas)
     public static void initializeDatabase() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Crear tabla de usuarios
+            // Tabla de usuarios
             String sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
                     + "nombre VARCHAR(50) NOT NULL, "
@@ -34,7 +44,7 @@ public class DatabaseService {
                     + ");";
             stmt.execute(sqlUsuarios);
 
-            // Crear tabla de partidos
+            // Tabla de partidos (por simplicidad, sin modificaciones)
             String sqlPartidos = "CREATE TABLE IF NOT EXISTS partidos ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
                     + "creador_email VARCHAR(100) NOT NULL, "
@@ -47,7 +57,7 @@ public class DatabaseService {
                     + ");";
             stmt.execute(sqlPartidos);
 
-            // Crear tabla de torneos
+            // Tabla de torneos (por simplicidad, sin modificaciones)
             String sqlTorneos = "CREATE TABLE IF NOT EXISTS torneos ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
                     + "creador_email VARCHAR(100) NOT NULL, "
@@ -65,4 +75,3 @@ public class DatabaseService {
         }
     }
 }
-

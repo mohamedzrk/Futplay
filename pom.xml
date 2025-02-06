@@ -37,6 +37,14 @@
       <version>0.9.0</version>
     </dependency>
 
+    <!-- HikariCP para pool de conexiones -->
+<dependency>
+  <groupId>com.zaxxer</groupId>
+  <artifactId>HikariCP</artifactId>
+  <version>5.0.1</version>
+</dependency>
+
+
     <!-- MySQL Connector (si decides usar MySQL) -->
     <!-- Descomenta esta sección si prefieres usar MySQL en vez de H2 -->
     <!-- 

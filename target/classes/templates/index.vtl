@@ -1,21 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>$titulo</title>
-    <link rel="stylesheet" href="/css/styles.css">
+  <meta charset="UTF-8">
+  <title><?php echo htmlspecialchars($titulo ?? 'Título predeterminado'); ?></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>$titulo</h1>
-    <p>$mensaje</p>
-    <nav>
-        <ul>
-            <li><a href="/registro">Registro</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/partidos">Partidos</a></li>
-            <li><a href="/torneos">Torneos</a></li>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">FutPlay</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/registro">Registro</a></li>
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/partidos">Partidos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/torneos">Torneos</a></li>
         </ul>
-    </nav>
+      </div>
+    </div>
+  </nav>
+  
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+  </div>
+  
+  <div class="container mt-5">
+    <div class="text-center">
+      <h1><?php echo htmlspecialchars($titulo ?? 'Título predeterminado'); ?></h1>
+      <p class="lead"><?php echo htmlspecialchars($mensaje ?? ''); ?></p>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    function getUrlParameter(name) {
+      var urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || '';
+    }
+    
+    var toastMessage = getUrlParameter('toast');
+    var toastType = getUrlParameter('toastType') || 'info';
+    var validToastTypes = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+
+    if (toastMessage.trim() && validToastTypes.includes(toastType)) {
+      var toastContainer = document.getElementById('toast-container');
+      var toastHTML = `
+      <div class="toast align-items-center text-white bg-${toastType} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            ${toastMessage}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>`;
+      toastContainer.innerHTML = toastHTML;
+      var toastEl = toastContainer.querySelector('.toast');
+      var bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
+      bsToast.show();
+    }
+  </script>
 </body>
 </html>
-
